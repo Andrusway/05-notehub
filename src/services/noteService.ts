@@ -17,7 +17,7 @@ export async function fetchNotes(
   page: number,
   search: string
 ): Promise<FetchNotesResponse> {
-  const { data } = await api.get("/notes", {
+  const { data } = await api.get<FetchNotesResponse>("/notes", {
     params: {
       page,
       perPage: 12,
@@ -28,7 +28,7 @@ export async function fetchNotes(
 }
 
 export async function createNote(newNote: NoteFormValues): Promise<Note> {
-  const { data } = await api.post("/notes", newNote, {
+  const { data } = await api.post<Note>("/notes", newNote, {
     headers: {
       Authorization: `Bearer ${import.meta.env.VITE_NOTEHUB_TOKEN}`,
     },
@@ -37,7 +37,7 @@ export async function createNote(newNote: NoteFormValues): Promise<Note> {
 }
 
 export async function deleteNote(id: Note["id"]): Promise<Note> {
-  const { data } = await api.delete(`/notes/${id}`, {
+  const { data } = await api.delete<Note>(`/notes/${id}`, {
     headers: {
       Authorization: `Bearer ${import.meta.env.VITE_NOTEHUB_TOKEN}`,
     },

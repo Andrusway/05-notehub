@@ -6,7 +6,6 @@ import toast from "react-hot-toast";
 
 interface NoteListProps {
   notes: Note[];
-  onDelete: (id: string) => void;
 }
 
 export default function NoteList({ notes }: NoteListProps) {

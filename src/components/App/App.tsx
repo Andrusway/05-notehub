@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import css from "./App.module.css";
 
 import { fetchNotes } from "../../services/noteService";
@@ -21,22 +21,22 @@ export default function App() {
 
   const [debouncedSearch] = useDebounce(searchTerm, 500);
 
-  const { data, isLoading, isError, refetch } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ["notes", currentPage, debouncedSearch],
     queryFn: () => fetchNotes(currentPage, debouncedSearch),
     placeholderData: keepPreviousData,
   });
 
-  const handleDelete = () => {
-    refetch();
-    toast.success("Note deleted!");
+  const hendleSubmit = (value: string) => {
+    setSearchTerm(value);
+    setCurrentPage(1);
   };
 
   return (
     <div className={css.app}>
       <Toaster position="top-center" />
       <header className={css.toolbar}>
-        <SearchBox value={searchTerm} onChange={setSearchTerm} />
+        <SearchBox value={searchTerm} onChange={hendleSubmit} />
         {data && data.totalPages > 1 && (
           <Pagination
             totalPages={data.totalPages}
@@ -52,9 +52,7 @@ export default function App() {
       {isLoading && <Loader />}
       {isError && <ErrorMessage />}
 
-      {data && data.notes.length > 0 && (
-        <NoteList notes={data.notes} onDelete={handleDelete} />
-      )}
+      {data && data.notes.length > 0 && <NoteList notes={data.notes} />}
 
       {data && data.notes.length === 0 && <ErrorMessage />}
 
